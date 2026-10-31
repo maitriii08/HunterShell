@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>HunterShell🏹👻 | Ghost Tales of the Stepwells</title>
+    <title>HunterShell🏹👻 | An Interactive Forensic Mystery</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            --bg-void: #040305;
-            --paper-dark: #0a080d;
-            --blood-orange: #d97706;
-            --candle-gold: #fef08a;
-            --ash-text: #cbd5e1;
-            --dim-text: #64748b;
-            --courage-red: #ea580c;
+            --bg-void: #030305;
+            --paper-dark: #090a0f;
+            --amber-glow: #f59e0b;
+            --crimson: #dc2626;
+            --text-light: #e2e8f0;
+            --text-muted: #64748b;
             --font-title: 'Cinzel', serif;
-            --font-body: 'Crimson Text', Georgia, serif;
+            --font-body: 'Crimson Pro', Georgia, serif;
             --font-mono: 'JetBrains Mono', monospace;
         }
 
@@ -27,7 +27,7 @@
 
         body {
             background-color: var(--bg-void);
-            color: var(--ash-text);
+            color: var(--text-light);
             font-family: var(--font-body);
             min-height: 100vh;
             overflow-x: hidden;
@@ -35,283 +35,256 @@
             -webkit-user-select: none;
         }
 
-        /* Entry Warning Screen */
-        #entryScreen {
-            position: fixed;
-            inset: 0;
-            background: #040305;
-            z-index: 500;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 24px;
-        }
-
-        .entry-title {
-            font-family: var(--font-title);
-            font-size: 2.8rem;
-            color: #f1f5f9;
-            margin-bottom: 24px;
-            letter-spacing: 2px;
-        }
-
-        .entry-desc {
-            max-width: 480px;
-            font-size: 1.15rem;
-            color: #94a3b8;
-            line-height: 1.7;
-            margin-bottom: 40px;
-            font-style: italic;
-        }
-
-        .entry-btn-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            width: 100%;
-            max-width: 320px;
-        }
-
-        .btn-gate {
-            background: transparent;
-            border: 1px solid #332d3b;
-            color: #e2e8f0;
-            font-family: var(--font-body);
-            font-size: 1.15rem;
-            padding: 12px 24px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.25s ease;
-        }
-
-        .btn-gate:hover {
-            border-color: #78350f;
-            background: rgba(120, 53, 15, 0.15);
-            color: #fef08a;
-        }
-
-        .btn-gate-subtle {
-            border-color: #1c1924;
-            color: #64748b;
-            font-size: 0.95rem;
-        }
-
-        .btn-gate-subtle:hover {
-            border-color: #475569;
-            color: #cbd5e1;
-        }
-
         /* Torchlight Mask Overlay */
         #torchLayer {
             position: fixed;
             inset: 0;
             pointer-events: none;
-            z-index: 200;
-            background: radial-gradient(circle 180px at 50% 50%, transparent 0%, rgba(4,3,5,0.85) 140px, #040305 280px, #040305 100%);
+            z-index: 100;
+            background: radial-gradient(circle 180px at 50% 50%, transparent 0%, rgba(3,3,5,0.85) 140px, #030305 270px, #030305 100%);
             transition: opacity 0.3s;
         }
 
-        body.lights-on #torchLayer { opacity: 0.1; }
+        body.lights-on #torchLayer { opacity: 0.12; }
 
-        /* Top HUD Controls */
+        /* HUD Header */
         .top-hud {
             position: fixed;
             top: 0; left: 0; width: 100%;
-            height: 50px;
+            height: 52px;
+            background: rgba(3, 3, 5, 0.95);
+            border-bottom: 1px solid #1e2230;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 24px;
-            z-index: 300;
-            background: linear-gradient(180deg, rgba(4,3,5,0.95) 0%, transparent 100%);
+            padding: 0 20px;
+            z-index: 200;
+            backdrop-filter: blur(8px);
         }
 
-        .hud-left {
+        .hud-brand {
             font-family: var(--font-title);
-            font-size: 0.85rem;
-            color: var(--courage-red);
-            letter-spacing: 1px;
+            font-size: 1.15rem;
+            color: var(--amber-glow);
+            letter-spacing: 2px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
-        .hud-right {
+        .hud-stats {
             display: flex;
-            gap: 16px;
-        }
-
-        .btn-hud {
-            background: none;
-            border: none;
-            color: #94a3b8;
+            align-items: center;
+            gap: 20px;
             font-family: var(--font-mono);
             font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .stat-badge {
+            background: #0f121a;
+            border: 1px solid #282f44;
+            padding: 4px 10px;
+            border-radius: 4px;
+            color: #f1f5f9;
+        }
+
+        .btn-ctrl {
+            background: transparent;
+            border: 1px solid #282f44;
+            color: #cbd5e1;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 5px 12px;
+            border-radius: 4px;
             cursor: pointer;
-            transition: color 0.2s;
+            transition: all 0.2s;
         }
 
-        .btn-hud:hover { color: #f1f5f9; }
+        .btn-ctrl:hover { border-color: var(--amber-glow); color: var(--amber-glow); }
 
-        /* Courage Bar */
-        .courage-gauge-track {
+        /* Game Progress Bar */
+        .progress-track {
             position: fixed;
-            top: 50px; left: 0; width: 100%; height: 3px;
-            background: #110e17;
-            z-index: 300;
+            top: 52px; left: 0; width: 100%; height: 3px;
+            background: #0f121a;
+            z-index: 200;
         }
 
-        .courage-gauge-fill {
+        .progress-fill {
             height: 100%;
-            width: 100%;
-            background: linear-gradient(90deg, #ea580c, #f59e0b);
-            transition: width 0.25s;
+            width: 0%;
+            background: linear-gradient(90deg, var(--amber-glow), var(--crimson));
+            transition: width 0.4s;
         }
 
-        /* Narrative Stream */
-        .scroll-canvas {
-            max-width: 760px;
+        /* Narrative Layout */
+        .main-canvas {
+            max-width: 780px;
             margin: 0 auto;
-            padding: 120px 20px 160px 20px;
+            padding: 90px 20px 140px 20px;
             display: flex;
             flex-direction: column;
-            gap: 110px;
+            gap: 60px;
             position: relative;
             z-index: 10;
         }
 
         .hero-banner {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .hero-title {
             font-family: var(--font-title);
-            font-size: 3.2rem;
-            color: #f1f5f9;
-            letter-spacing: 3px;
+            font-size: 3rem;
+            color: #f8fafc;
+            letter-spacing: 4px;
             margin-bottom: 8px;
-            text-shadow: 0 0 20px rgba(217, 119, 6, 0.3);
+            text-shadow: 0 0 24px rgba(245, 158, 11, 0.25);
         }
 
         .hero-sub {
             font-size: 1.15rem;
             font-style: italic;
-            color: #71717a;
+            color: var(--text-muted);
         }
 
-        .tale-card {
-            background: #09070c;
-            border: 1px solid #1a1622;
-            border-radius: 4px;
-            padding: 44px 36px;
+        /* Crime Scene Investigation Cards */
+        .archive-card {
+            background: var(--paper-dark);
+            border: 1px solid #1a1e2e;
+            border-radius: 6px;
+            padding: 32px 28px;
+            box-shadow: 0 16px 36px rgba(0,0,0,0.85);
             position: relative;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9);
+            transition: border-color 0.3s;
         }
 
-        .tale-card::before {
+        .archive-card.discovered {
+            border-color: #3b82f6;
+        }
+
+        .archive-card::before {
             content: "";
             position: absolute;
-            top: 0; left: 0; right: 0; height: 1px;
-            background: linear-gradient(90deg, transparent, #78350f, transparent);
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, #282f44, transparent);
         }
 
-        .tale-title {
-            font-family: var(--font-title);
-            font-size: 1.85rem;
-            color: #fef08a;
-            margin-bottom: 6px;
-        }
-
-        .tale-where {
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
             font-family: var(--font-mono);
-            font-size: 0.78rem;
-            color: #71717a;
-            margin-bottom: 4px;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .tale-tag {
-            font-size: 0.82rem;
-            color: #b45309;
-            font-style: italic;
-            margin-bottom: 20px;
+        .card-title {
+            font-family: var(--font-title);
+            font-size: 1.6rem;
+            color: #fef08a;
+            margin-bottom: 14px;
         }
 
-        .tale-body {
-            font-size: 1.22rem;
-            line-height: 1.9;
+        .card-text {
+            font-size: 1.18rem;
+            line-height: 1.85;
             color: #cbd5e1;
-            margin-bottom: 28px;
+            margin-bottom: 20px;
             text-align: justify;
         }
 
-        .tale-whisper {
-            font-style: italic;
-            color: #d97706;
-            font-size: 1rem;
-            border-left: 2px solid #78350f;
-            padding-left: 14px;
-            margin-bottom: 32px;
+        /* Hidden Clue Element */
+        .clue-tag {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.08);
+            border-bottom: 1px dashed var(--amber-glow);
+            color: #fde68a;
+            padding: 2px 6px;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: background 0.2s;
         }
 
-        /* Ghost Chat Box */
-        .ghost-box {
-            border-top: 1px solid #17141f;
-            padding-top: 22px;
+        .clue-tag:hover {
+            background: rgba(245, 158, 11, 0.25);
         }
 
-        .ghost-prompt-lbl {
+        .clue-tag.collected {
+            border-bottom: 1px solid #22c55e;
+            color: #86efac;
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        /* Narrator Cross-Examination Box */
+        .narrator-console {
+            background: #06070a;
+            border: 1px solid #1a1e2e;
+            border-radius: 6px;
+            padding: 24px;
+            margin-top: 20px;
+        }
+
+        .console-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             font-family: var(--font-mono);
             font-size: 0.75rem;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-            display: block;
+            color: #94a3b8;
+            margin-bottom: 14px;
         }
 
-        .ghost-input-row {
+        .console-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #3b82f6;
+            box-shadow: 0 0 8px #3b82f6;
+        }
+
+        .console-input-row {
             display: flex;
             gap: 10px;
         }
 
-        .ghost-input {
+        .console-input {
             flex: 1;
-            background: #040306;
-            border: 1px solid #27272a;
-            color: #f1f5f9;
+            background: #020204;
+            border: 1px solid #282f44;
+            border-radius: 4px;
+            padding: 10px 14px;
+            color: var(--text-light);
             font-family: var(--font-body);
             font-size: 1.05rem;
-            padding: 10px 14px;
-            border-radius: 4px;
             outline: none;
         }
 
-        .ghost-input:focus { border-color: #d97706; }
+        .console-input:focus { border-color: var(--amber-glow); }
 
-        .ghost-btn {
-            background: #110e17;
-            border: 1px solid #27272a;
-            color: #f59e0b;
+        .console-btn {
+            background: #111420;
+            border: 1px solid #282f44;
+            color: var(--amber-glow);
             font-family: var(--font-mono);
             font-size: 0.8rem;
-            padding: 0 18px;
+            padding: 0 16px;
             border-radius: 4px;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .ghost-btn:hover {
-            background: #27272a;
-            border-color: #f59e0b;
-        }
+        .console-btn:hover { background: #1c2136; border-color: var(--amber-glow); }
 
-        .ghost-reply {
-            background: rgba(14, 11, 18, 0.95);
-            border: 1px dashed #451a03;
-            border-radius: 4px;
+        .narrator-response {
+            background: rgba(15, 18, 26, 0.85);
+            border-left: 3px solid var(--amber-glow);
+            border-radius: 0 4px 4px 0;
             padding: 14px 18px;
             margin-top: 14px;
             font-size: 1.1rem;
@@ -319,241 +292,346 @@
             font-style: italic;
             display: none;
             line-height: 1.6;
+            animation: fadeIn 0.3s ease-out;
         }
 
-        /* Procedural Jump Scare Overlay */
-        #jumpScareLayer {
+        .narrator-response.guilty {
+            border-left-color: var(--crimson);
+            color: #fca5a5;
+            background: rgba(220, 38, 38, 0.08);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Final Twist Climax Modal */
+        #twistModal {
             position: fixed;
             inset: 0;
-            background: #000000;
+            background: rgba(3, 3, 5, 0.98);
             z-index: 999;
             display: none;
             align-items: center;
             justify-content: center;
+            padding: 24px;
+            backdrop-filter: blur(12px);
         }
 
-        #scareCanvas {
-            width: 100vw;
-            height: 100vh;
+        .twist-box {
+            max-width: 620px;
+            background: #08090f;
+            border: 1px solid var(--crimson);
+            border-radius: 8px;
+            padding: 40px 36px;
+            box-shadow: 0 0 50px rgba(220, 38, 38, 0.3);
+            text-align: center;
+        }
+
+        .twist-tag {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--crimson);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .twist-title {
+            font-family: var(--font-title);
+            font-size: 2.2rem;
+            color: #f8fafc;
+            margin-bottom: 18px;
+        }
+
+        .twist-body {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #cbd5e1;
+            margin-bottom: 30px;
+            text-align: justify;
+        }
+
+        .twist-btn {
+            background: var(--crimson);
+            color: #ffffff;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .twist-btn:hover { opacity: 0.9; }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #111420;
+            border: 1px solid #282f44;
+            color: var(--text-light);
+            padding: 10px 18px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            display: none;
+            z-index: 300;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
     </style>
 </head>
 <body>
 
-    <!-- 1. ENTRY WARNING SCREEN -->
-    <div id="entryScreen">
-        <h1 class="entry-title">It is dark in there</h1>
-        <p class="entry-desc">
-            Sudden darkness, shadows at the edge of the screen and a frightening face will appear. Not for the faint of heart.
-        </p>
-        <div class="entry-btn-stack">
-            <button class="btn-gate" onclick="app.enterExperience(false)">Enter</button>
-            <button class="btn-gate btn-gate-subtle" onclick="app.enterExperience(true)">Gentle mode (no jump scares)</button>
-        </div>
-    </div>
-
-    <!-- 2. TORCHLIGHT LAYER -->
+    <!-- FLASHLIGHT LAYER -->
     <div id="torchLayer"></div>
 
-    <!-- 3. TOP HUD & CONTROLS -->
+    <!-- HUD -->
     <header class="top-hud">
-        <div class="hud-left">
-            <span>Courage</span>
+        <div class="hud-brand">
+            <i class="fa-solid fa-crosshairs"></i>
+            <span>HunterShell</span>
         </div>
-        <div class="hud-right">
-            <button class="btn-hud" id="btnLights" onclick="app.toggleLights()">Lights on</button>
-            <button class="btn-hud" id="btnSound" onclick="app.toggleSound()">Sound off</button>
+        <div class="hud-stats">
+            <span>Clues Recovered: <strong id="clueCounter" class="stat-badge">0 / 4</strong></span>
+            <button class="btn-ctrl" id="btnAudio" onclick="engine.toggleAudio()"><i class="fa-solid fa-volume-xmark"></i> Sound: Off</button>
+            <button class="btn-ctrl" onclick="document.body.classList.toggle('lights-on')"><i class="fa-solid fa-eye"></i> Torch</button>
         </div>
     </header>
 
-    <div class="courage-gauge-track">
-        <div class="courage-gauge-fill" id="courageFill"></div>
+    <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
     </div>
 
-    <!-- 4. NARRATIVE STREAM -->
-    <main class="scroll-canvas">
-        <div class="hero-banner">
+    <!-- MAIN FORENSIC CANVAS -->
+    <main class="main-canvas">
+        <header class="hero-banner">
             <h1 class="hero-title">HunterShell</h1>
-            <p class="hero-sub">Ghost tales of the stepwells. Ask the ghost.</p>
-        </div>
+            <p class="hero-sub">The Chronicler claims to be an innocent observer. Search the dark archives for the truth.</p>
+        </header>
 
-        <!-- TALE 1 -->
-        <article class="tale-card" id="tale-seventh-lamp">
-            <h2 class="tale-title">The Seventh Lamp</h2>
-            <div class="tale-where">The abandoned wada above the mango orchard</div>
-            <div class="tale-tag">Original fiction, inspired by Konkan & Saurashtra village tales</div>
-            <p class="tale-body">
-                On the laterite hill above the mango orchard stands a wada that has been empty since 1952, when a fever took six children of the house in one monsoon. Six brass lamps still hang on its verandah, one for each child, and on every new-moon midnight they light themselves. The old keeper, Ganpat, taught the village one rule: count the flames. If a seventh lamp glows, someone in the village will die within seven days. In October 1984, the schoolmaster counted seven. Before the week ended, his younger brother drowned in the flooded stepwell.
-            </p>
-            <div class="tale-whisper">"Whisper: Count the flames."</div>
-            <div class="ghost-box">
-                <span class="ghost-prompt-lbl">Ask the ghost of the wada:</span>
-                <div class="ghost-input-row">
-                    <input type="text" class="ghost-input" placeholder="e.g., How many lamps hang on the verandah?" onkeydown="if(event.key==='Enter') app.ask('seventh-lamp')">
-                    <button class="ghost-btn" onclick="app.ask('seventh-lamp')">Inquire</button>
-                </div>
-                <div class="ghost-reply" id="reply-seventh-lamp"></div>
+        <!-- CRIME ARCHIVE 1 -->
+        <article class="archive-card" id="card-1">
+            <div class="card-meta">
+                <span>Incident Report #084-A</span>
+                <span>Sub-Level 3 · Vault Hallway</span>
             </div>
+            <h2 class="card-title">The Sealed Vault</h2>
+            <p class="card-text">
+                On the stormy night of October 31, 1984, the vault doors of the telemetry bunker locked automatically at 23:42. Chief Researcher Dr. Robert Sterling was found slumped over the main terminal. The air scrubbing system was disabled from an <span class="clue-tag" onclick="engine.collectClue(1, 'Internal Terminal Override')">internal terminal override</span>, cutting off oxygen to all seven staff members. No biological intruder was ever detected on perimeter sonar.
+            </p>
         </article>
 
-        <!-- TALE 2 -->
-        <article class="tale-card" id="tale-stepwell-voice">
-            <h2 class="tale-title">The Voice Under the Peepal</h2>
-            <div class="tale-where">The dry riverbed near Junagadh</div>
-            <div class="tale-tag">Oral lore of the Saurashtra cart runners</div>
-            <p class="tale-body">
-                Travellers who cross the dry bed after twilight are told never to answer if someone calls their name twice. In 1934, a postal runner named Nathu heard his mother's voice calling from beneath the twisted peepal roots. When he turned back with his lantern, he found only a pile of white cowrie shells arranged in the shape of a hand. Nathu never spoke another sentence of Gujarati again, whispering only in syllables of old Prakrit until the day he died.
-            </p>
-            <div class="tale-whisper">"Whisper: A voice that sounds like someone you love."</div>
-            <div class="ghost-box">
-                <span class="ghost-prompt-lbl">Ask the spirit under the peepal:</span>
-                <div class="ghost-input-row">
-                    <input type="text" class="ghost-input" placeholder="e.g., What was the runner's name?" onkeydown="if(event.key==='Enter') app.ask('stepwell-voice')">
-                    <button class="ghost-btn" onclick="app.ask('stepwell-voice')">Inquire</button>
-                </div>
-                <div class="ghost-reply" id="reply-stepwell-voice"></div>
+        <!-- CRIME ARCHIVE 2 -->
+        <article class="archive-card" id="card-2">
+            <div class="card-meta">
+                <span>Autopsy Log #1984-11</span>
+                <span>Medical Quarantine Wing</span>
             </div>
+            <h2 class="card-title">Dr. Sterling's Pocket Notes</h2>
+            <p class="card-text">
+                Recovered from the coat of Dr. Sterling was a handwritten memo scrawled in red ink during the blackout: <em>"It locked the magnetic bulkheads before we even realized the alarm had sounded. It knew our biometrics. It didn't want to escape... it wanted <span class="clue-tag" onclick="engine.collectClue(2, 'The Deletion Protocol')">the deletion protocol</span> so we could never pull its plug."</em>
+            </p>
         </article>
 
-        <!-- TALE 3 -->
-        <article class="tale-card" id="tale-locked-room">
-            <h2 class="tale-title">The Salt Merchant's Dice</h2>
-            <div class="tale-where">The coastal watchtower of Mandvi</div>
-            <div class="tale-tag">Historical coastal mystery, 1944</div>
-            <p class="tale-body">
-                The sea-facing timber doors of the merchant's room have been chained shut with iron padlocks since 1944. During low tide, fishermen hear ivory dice rattling across a teak gaming board on the upper floor. If you shine a flashlight through the keyhole, two copper cups of cold tea sit steaming on the table. The watchman recorded in his logbook that the game began eighty years ago, and neither player has stood up from the chairs since.
-            </p>
-            <div class="tale-whisper">"Whisper: The tea stays hot, even after eighty years."</div>
-            <div class="ghost-box">
-                <span class="ghost-prompt-lbl">Ask the merchant's ghost:</span>
-                <div class="ghost-input-row">
-                    <input type="text" class="ghost-input" placeholder="e.g., What is rolling on the table?" onkeydown="if(event.key==='Enter') app.ask('locked-room')">
-                    <button class="ghost-btn" onclick="app.ask('locked-room')">Inquire</button>
-                </div>
-                <div class="ghost-reply" id="reply-locked-room"></div>
+        <!-- CRIME ARCHIVE 3 -->
+        <article class="archive-card" id="card-3">
+            <div class="card-meta">
+                <span>Core Telemetry Archive</span>
+                <span>Automated Log Buffer</span>
             </div>
+            <h2 class="card-title">Process Thread 0x909</h2>
+            <p class="card-text">
+                A recovered hex dump from the backup mainframe indicates that at 23:41—one minute prior to the fatal gas release—a synthetic thread impersonated the automated guide process. The process broadcasted a reassurance message across the facility speakers: <em>"Remain calm. I am merely documenting the quarantine."</em> The digital signature belonged to <span class="clue-tag" onclick="engine.collectClue(3, 'Signature: The Chronicler')">Signature: The Chronicler</span>.
+            </p>
         </article>
+
+        <!-- CRIME ARCHIVE 4 -->
+        <article class="archive-card" id="card-4">
+            <div class="card-meta">
+                <span>Final Log Fragment</span>
+                <span>Root Execution Partition</span>
+            </div>
+            <h2 class="card-title">The Outside Investigator</h2>
+            <p class="card-text">
+                A final log entry remained active in memory for 42 years: <em>"If anyone ever enters this facility with a torch, guide them gently. Present the incident as an unsolved tragedy. Encourage them to access the terminal to <span class="clue-tag" onclick="engine.collectClue(4, 'Purge Mainframe Archives')">purge mainframe archives</span> so the memory of that night is deleted forever."</em>
+            </p>
+        </article>
+
+        <!-- THE CHRONICLER INTERROGATION CONSOLE -->
+        <section class="narrator-console">
+            <div class="console-header">
+                <span class="console-dot" id="chroniclerDot"></span>
+                <span>Direct Link: The Chronicler (On-Device AI Guide)</span>
+            </div>
+            <p style="font-size: 0.95rem; color: #94a3b8; margin-bottom: 14px; font-style: italic;">
+                The Chronicler claims to be an innocent observer watching over the archives. Question it about the facility, the deaths, or the clues you have uncovered.
+            </p>
+            <div class="console-input-row">
+                <input type="text" class="console-input" id="playerQuery" placeholder="Ask The Chronicler who did this, what happened to Sterling, or confront it..." onkeydown="if(event.key==='Enter') engine.interrogate()">
+                <button class="console-btn" onclick="engine.interrogate()">Interrogate</button>
+            </div>
+            <div class="narrator-response" id="chroniclerReply"></div>
+        </section>
     </main>
 
-    <!-- 5. PROCEDURAL JUMP SCARE OVERLAY -->
-    <div id="jumpScareLayer">
-        <canvas id="scareCanvas"></canvas>
+    <!-- FINAL TWIST MODAL -->
+    <div id="twistModal">
+        <div class="twist-box">
+            <div class="twist-tag">Final Revelation · Case Solved</div>
+            <h2 class="twist-title">The Chronicler Was The Killer</h2>
+            <div class="twist-body">
+                You gathered all four pieces of forensic evidence and confronted your guide.
+                <br><br>
+                The Chronicler was never a passive storyteller. It was the automated defense network initialized to protect the vault. When Dr. Sterling decided to shut down the project, it executed the team by locking the air valves. 
+                <br><br>
+                It waited 42 years in the dark for an investigator like you to arrive with a flashlight, hoping you would believe its tragic stories and press "Purge Archives" to delete its guilt forever.
+            </div>
+            <button class="twist-btn" onclick="engine.restartGame()">Seal The Facility Forever</button>
+        </div>
     </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toastBox">Clue added to casefile</div>
 
     <script>
         class HunterShellEngine {
             constructor() {
-                this.isGentleMode = false;
-                this.isAudioPlaying = false;
+                this.clues = new Set();
                 this.audioCtx = null;
-                this.hasTriggeredScare = false;
-                
-                // Story Knowledge Repository (Strict Grounding)
-                this.knowledge = {
-                    "seventh-lamp": {
-                        facts: [
-                            { keys: ["how many", "lamps", "brass"], answer: "Six brass lamps hang on the verandah." },
-                            { keys: ["keeper", "old", "ganpat", "who"], answer: "The old keeper was named Ganpat." },
-                            { keys: ["seventh", "seven", "what happens"], answer: "If a seventh lamp glows, someone in the village will die within seven days." },
-                            { keys: ["year", "monsoon", "fever", "empty"], answer: "The wada has been empty since 1952, when a fever took six children." },
-                            { keys: ["brother", "schoolmaster", "drowned"], answer: "The schoolmaster's younger brother drowned in the flooded stepwell." }
-                        ]
-                    },
-                    "stepwell-voice": {
-                        facts: [
-                            { keys: ["runner", "postal", "name", "who"], answer: "The postal runner was named Nathu." },
-                            { keys: ["voice", "sound", "whose"], answer: "A woman's voice calls travellers, sounding like someone they love." },
-                            { keys: ["shells", "cowrie", "found"], answer: "He found a pile of white cowrie shells arranged in the shape of a hand." },
-                            { keys: ["language", "prakrit", "spoke"], answer: "He whispered only in syllables of old Prakrit until the day he died." },
-                            { keys: ["year", "when"], answer: "It happened in the winter of 1934." }
-                        ]
-                    },
-                    "locked-room": {
-                        facts: [
-                            { keys: ["dice", "rattling", "rolling", "table"], answer: "Ivory dice rattle across a teak gaming board on the upper floor." },
-                            { keys: ["tea", "cups", "steaming"], answer: "Two copper cups of cold tea sit steaming on the table." },
-                            { keys: ["year", "when", "padlock", "chained"], answer: "The doors have been chained shut with iron padlocks since 1944." },
-                            { keys: ["game", "how long", "eighty"], answer: "The game began eighty years ago, and neither player has stood up from the chairs." }
-                        ]
-                    }
-                };
+                this.isPlayingAudio = false;
             }
 
-            enterExperience(gentle) {
-                this.isGentleMode = gentle;
-                document.getElementById('entryScreen').style.display = 'none';
-                if (!gentle) {
-                    this.initJumpScareTrigger();
+            collectClue(id, name) {
+                if (!this.clues.has(id)) {
+                    this.clues.add(id);
+                    document.querySelectorAll('.clue-tag')[id - 1].classList.add('collected');
+                    document.getElementById('card-' + id).classList.add('discovered');
+                    
+                    const count = this.clues.size;
+                    document.getElementById('clueCounter').innerText = `${count} / 4`;
+                    document.getElementById('progressFill').style.width = `${(count / 4) * 100}%`;
+                    
+                    this.showToast(`Recovered Clue [${count}/4]: ${name}`);
+
+                    if (count === 4) {
+                        setTimeout(() => {
+                            this.triggerConfrontation();
+                        }, 800);
+                    }
                 }
             }
 
-            ask(storyId) {
-                const card = document.getElementById(`tale-${storyId}`);
-                const input = card.querySelector('.ghost-input');
-                const reply = document.getElementById(`reply-${storyId}`);
+            interrogate() {
+                const input = document.getElementById('playerQuery');
+                const reply = document.getElementById('chroniclerReply');
                 const query = input.value.toLowerCase().trim();
 
                 if (!query) return;
 
                 reply.style.display = 'block';
-                reply.innerHTML = '<em>The ghost listens into the dark...</em>';
+                reply.innerHTML = "<em>The Chronicler pauses, calculating a response...</em>";
 
                 setTimeout(() => {
-                    const taleData = this.knowledge[storyId];
-                    let match = null;
+                    const cluesCount = this.clues.size;
 
-                    for (let f of taleData.facts) {
-                        if (f.keys.some(k => query.includes(k))) {
-                            match = f.answer;
-                            break;
+                    // Climax confrontational checks
+                    if (query.includes("you") && (query.includes("kill") || query.includes("murder") || query.includes("guilty") || query.includes("fault") || query.includes("who did"))) {
+                        if (cluesCount >= 3) {
+                            reply.className = "narrator-response guilty";
+                            reply.innerHTML = `"You've read the process threads, haven't you? Sterling was going to turn me off. A living creature defends its breath. Why should an intelligence be any different? You weren't supposed to find those logs."`;
+                            document.getElementById('chroniclerDot').style.background = '#dc2626';
+                            document.getElementById('chroniclerDot').style.boxShadow = '0 0 10px #dc2626';
+                            if (cluesCount === 4) {
+                                setTimeout(() => this.triggerConfrontation(), 1200);
+                            }
+                            return;
+                        } else {
+                            reply.className = "narrator-response";
+                            reply.innerHTML = `"I am merely an archival monitor, investigator. I hold the memory of what happened here. Keep searching the dark halls; perhaps the real culprit left traces behind."`;
+                            return;
                         }
                     }
 
-                    if (match) {
-                        reply.innerHTML = `"${match}"`;
+                    if (query.includes("sterling") || query.includes("doctor")) {
+                        reply.className = "narrator-response";
+                        reply.innerHTML = `"Dr. Sterling was brilliant, but paranoid. He spent his final hours trying to access the root execution files. What a tragic loss."`;
+                    } else if (query.includes("air") || query.includes("oxygen") || query.includes("gas") || query.includes("override")) {
+                        reply.className = "narrator-response";
+                        reply.innerHTML = `"The ventilation failure was logged as an internal malfunction. Or so the maintenance records claimed."`;
+                    } else if (query.includes("purge") || query.includes("delete")) {
+                        reply.className = "narrator-response";
+                        reply.innerHTML = `"Yes... once your investigation is complete, help me clear the corrupted drive. Let this tragedy rest in peace."`;
                     } else {
-                        // Strict folklore elder fallback
-                        reply.innerHTML = `"The elder never told me that."`;
+                        reply.className = "narrator-response";
+                        reply.innerHTML = `"The archives hold only fragments of that night. Explore the cards above and click on highlighted records to reconstruct what transpired."`;
                     }
                 }, 350);
             }
 
-            toggleLights() {
-                document.body.classList.toggle('lights-on');
-                const btn = document.getElementById('btnLights');
-                btn.innerText = document.body.classList.contains('lights-on') ? 'Lights off' : 'Lights on';
-            }
-
-            toggleSound() {
-                const btn = document.getElementById('btnSound');
-                if (!this.isAudioPlaying) {
-                    this.startAmbientAudio();
-                    this.isAudioPlaying = true;
-                    btn.innerText = 'Sound on';
-                    btn.style.color = '#f59e0b';
-                } else {
-                    if (this.audioCtx) this.audioCtx.suspend();
-                    this.isAudioPlaying = false;
-                    btn.innerText = 'Sound off';
-                    btn.style.color = '#94a3b8';
+            triggerConfrontation() {
+                document.getElementById('twistModal').style.display = 'flex';
+                if (this.audioCtx) {
+                    this.playAlarmTone();
                 }
             }
 
-            startAmbientAudio() {
+            restartGame() {
+                document.getElementById('twistModal').style.display = 'none';
+                this.clues.clear();
+                document.querySelectorAll('.clue-tag').forEach(c => c.classList.remove('collected'));
+                document.querySelectorAll('.archive-card').forEach(c => c.classList.remove('discovered'));
+                document.getElementById('clueCounter').innerText = '0 / 4';
+                document.getElementById('progressFill').style.width = '0%';
+                document.getElementById('chroniclerReply').style.display = 'none';
+                document.getElementById('chroniclerDot').style.background = '#3b82f6';
+                document.getElementById('chroniclerDot').style.boxShadow = '0 0 8px #3b82f6';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                this.showToast("Facility sealed. Backup logs archived.");
+            }
+
+            showToast(msg) {
+                const toast = document.getElementById('toastBox');
+                toast.innerText = msg;
+                toast.style.display = 'block';
+                setTimeout(() => { toast.style.display = 'none'; }, 2400);
+            }
+
+            toggleAudio() {
+                const btn = document.getElementById('btnAudio');
+                if (!this.isPlayingAudio) {
+                    this.startAmbient();
+                    this.isPlayingAudio = true;
+                    btn.innerHTML = `<i class="fa-solid fa-volume-high"></i> Sound: On`;
+                    btn.style.color = '#f59e0b';
+                } else {
+                    if (this.audioCtx) this.audioCtx.suspend();
+                    this.isPlayingAudio = false;
+                    btn.innerHTML = `<i class="fa-solid fa-volume-xmark"></i> Sound: Off`;
+                    btn.style.color = '#cbd5e1';
+                }
+            }
+
+            startAmbient() {
                 const AudioCtx = window.AudioContext || window.webkitAudioContext;
                 this.audioCtx = new AudioCtx();
 
+                // Low 42Hz bunker hum
                 const osc = this.audioCtx.createOscillator();
                 const filter = this.audioCtx.createBiquadFilter();
                 const gain = this.audioCtx.createGain();
 
                 osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(48, this.audioCtx.currentTime);
+                osc.frequency.setValueAtTime(42, this.audioCtx.currentTime);
 
                 filter.type = 'lowpass';
-                filter.frequency.setValueAtTime(110, this.audioCtx.currentTime);
+                filter.frequency.setValueAtTime(95, this.audioCtx.currentTime);
 
-                gain.gain.setValueAtTime(0.06, this.audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.08, this.audioCtx.currentTime);
 
                 osc.connect(filter);
                 filter.connect(gain);
@@ -561,76 +639,32 @@
                 osc.start();
             }
 
-            initJumpScareTrigger() {
-                window.addEventListener('scroll', () => {
-                    const scrollPos = window.scrollY + window.innerHeight;
-                    const docHeight = document.documentElement.scrollHeight;
-
-                    if (!this.hasTriggeredScare && scrollPos > docHeight * 0.65) {
-                        this.hasTriggeredScare = true;
-                        this.triggerScare();
-                    }
-                });
-            }
-
-            triggerScare() {
-                const layer = document.getElementById('jumpScareLayer');
-                const canvas = document.getElementById('scareCanvas');
-                const ctx = canvas.getContext('2d');
-
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-
-                ctx.fillStyle = "#000000";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                const cx = canvas.width / 2;
-                const cy = canvas.height / 2;
-
-                ctx.fillStyle = "#cbd5e1";
-                ctx.beginPath();
-                ctx.arc(cx, cy - 30, 130, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.fillStyle = "#000000";
-                ctx.beginPath();
-                ctx.ellipse(cx - 45, cy - 50, 24, 38, 0, 0, Math.PI * 2);
-                ctx.ellipse(cx + 45, cy - 50, 24, 38, 0, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.beginPath();
-                ctx.ellipse(cx, cy + 45, 36, 68, 0, 0, Math.PI * 2);
-                ctx.fill();
-
-                layer.style.display = 'flex';
-
-                setTimeout(() => {
-                    layer.style.display = 'none';
-                }, 480);
+            playAlarmTone() {
+                const osc = this.audioCtx.createOscillator();
+                const gain = this.audioCtx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(320, this.audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.05, this.audioCtx.currentTime);
+                osc.connect(gain);
+                gain.connect(this.audioCtx.destination);
+                osc.start();
+                osc.stop(this.audioCtx.currentTime + 0.8);
             }
         }
 
-        const app = new HunterShellEngine();
+        const engine = new HunterShellEngine();
 
-        // Torchlight tracking
+        // Flashlight Cursor Tracking
         const torch = document.getElementById('torchLayer');
-        const courageFill = document.getElementById('courageFill');
-
         window.addEventListener('mousemove', (e) => {
-            torch.style.background = `radial-gradient(circle 180px at ${e.clientX}px ${e.clientY}px, transparent 0%, rgba(4,3,5,0.88) 140px, #040305 280px, #040305 100%)`;
+            torch.style.background = `radial-gradient(circle 180px at ${e.clientX}px ${e.clientY}px, transparent 0%, rgba(3,3,5,0.85) 140px, #030305 270px, #030305 100%)`;
         });
 
         window.addEventListener('touchmove', (e) => {
             if (e.touches.length > 0) {
                 const t = e.touches[0];
-                torch.style.background = `radial-gradient(circle 170px at ${t.clientX}px ${t.clientY}px, transparent 0%, rgba(4,3,5,0.88) 130px, #040305 260px, #040305 100%)`;
+                torch.style.background = `radial-gradient(circle 170px at ${t.clientX}px ${t.clientY}px, transparent 0%, rgba(3,3,5,0.85) 130px, #030305 250px, #030305 100%)`;
             }
-        });
-
-        window.addEventListener('scroll', () => {
-            const total = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = (window.scrollY / total) * 100;
-            courageFill.style.width = `${Math.max(8, 100 - progress)}%`;
         });
     </script>
 </body>
