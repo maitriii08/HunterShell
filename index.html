@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>HunterShell🏹👻 | Ghost Tales of the Stepwells</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-void: #040305;
+            --paper-dark: #0a080d;
+            --blood-orange: #d97706;
+            --candle-gold: #fef08a;
+            --ash-text: #cbd5e1;
+            --dim-text: #64748b;
+            --courage-red: #ea580c;
+            --font-title: 'Cinzel', serif;
+            --font-body: 'Crimson Text', Georgia, serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-void);
+            color: var(--ash-text);
+            font-family: var(--font-body);
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Entry Warning Screen */
+        #entryScreen {
+            position: fixed;
+            inset: 0;
+            background: #040305;
+            z-index: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 24px;
+        }
+
+        .entry-title {
+            font-family: var(--font-title);
+            font-size: 2.8rem;
+            color: #f1f5f9;
+            margin-bottom: 24px;
+            letter-spacing: 2px;
+        }
+
+        .entry-desc {
+            max-width: 480px;
+            font-size: 1.15rem;
+            color: #94a3b8;
+            line-height: 1.7;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        .entry-btn-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .btn-gate {
+            background: transparent;
+            border: 1px solid #332d3b;
+            color: #e2e8f0;
+            font-family: var(--font-body);
+            font-size: 1.15rem;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .btn-gate:hover {
+            border-color: #78350f;
+            background: rgba(120, 53, 15, 0.15);
+            color: #fef08a;
+        }
+
+        .btn-gate-subtle {
+            border-color: #1c1924;
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        .btn-gate-subtle:hover {
+            border-color: #475569;
+            color: #cbd5e1;
+        }
+
+        /* Torchlight Mask Overlay */
+        #torchLayer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 200;
+            background: radial-gradient(circle 180px at 50% 50%, transparent 0%, rgba(4,3,5,0.85) 140px, #040305 280px, #040305 100%);
+            transition: opacity 0.3s;
+        }
+
+        body.lights-on #torchLayer { opacity: 0.1; }
+
+        /* Top HUD Controls */
+        .top-hud {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 300;
+            background: linear-gradient(180deg, rgba(4,3,5,0.95) 0%, transparent 100%);
+        }
+
+        .hud-left {
+            font-family: var(--font-title);
+            font-size: 0.85rem;
+            color: var(--courage-red);
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hud-right {
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn-hud {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .btn-hud:hover { color: #f1f5f9; }
+
+        /* Courage Bar */
+        .courage-gauge-track {
+            position: fixed;
+            top: 50px; left: 0; width: 100%; height: 3px;
+            background: #110e17;
+            z-index: 300;
+        }
+
+        .courage-gauge-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, #ea580c, #f59e0b);
+            transition: width 0.25s;
+        }
+
+        /* Narrative Stream */
+        .scroll-canvas {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 120px 20px 160px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 110px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-banner {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .hero-title {
+            font-family: var(--font-title);
+            font-size: 3.2rem;
+            color: #f1f5f9;
+            letter-spacing: 3px;
+            margin-bottom: 8px;
+            text-shadow: 0 0 20px rgba(217, 119, 6, 0.3);
+        }
+
+        .hero-sub {
+            font-size: 1.15rem;
+            font-style: italic;
+            color: #71717a;
+        }
+
+        .tale-card {
+            background: #09070c;
+            border: 1px solid #1a1622;
+            border-radius: 4px;
+            padding: 44px 36px;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9);
+        }
+
+        .tale-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, #78350f, transparent);
+        }
+
+        .tale-title {
+            font-family: var(--font-title);
+            font-size: 1.85rem;
+            color: #fef08a;
+            margin-bottom: 6px;
+        }
+
+        .tale-where {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            color: #71717a;
+            margin-bottom: 4px;
+        }
+
+        .tale-tag {
+            font-size: 0.82rem;
+            color: #b45309;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .tale-body {
+            font-size: 1.22rem;
+            line-height: 1.9;
+            color: #cbd5e1;
+            margin-bottom: 28px;
+            text-align: justify;
+        }
+
+        .tale-whisper {
+            font-style: italic;
+            color: #d97706;
+            font-size: 1rem;
+            border-left: 2px solid #78350f;
+            padding-left: 14px;
+            margin-bottom: 32px;
+        }
+
+        /* Ghost Chat Box */
+        .ghost-box {
+            border-top: 1px solid #17141f;
+            padding-top: 22px;
+        }
+
+        .ghost-prompt-lbl {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .ghost-input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .ghost-input {
+            flex: 1;
+            background: #040306;
+            border: 1px solid #27272a;
+            color: #f1f5f9;
+            font-family: var(--font-body);
+            font-size: 1.05rem;
+            padding: 10px 14px;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .ghost-input:focus { border-color: #d97706; }
+
+        .ghost-btn {
+            background: #110e17;
+            border: 1px solid #27272a;
+            color: #f59e0b;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            padding: 0 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ghost-btn:hover {
+            background: #27272a;
+            border-color: #f59e0b;
+        }
+
+        .ghost-reply {
+            background: rgba(14, 11, 18, 0.95);
+            border: 1px dashed #451a03;
+            border-radius: 4px;
+            padding: 14px 18px;
+            margin-top: 14px;
+            font-size: 1.1rem;
+            color: #fed7aa;
+            font-style: italic;
+            display: none;
+            line-height: 1.6;
+        }
+
+        /* Procedural Jump Scare Overlay */
+        #jumpScareLayer {
+            position: fixed;
+            inset: 0;
+            background: #000000;
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #scareCanvas {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. ENTRY WARNING SCREEN -->
+    <div id="entryScreen">
+        <h1 class="entry-title">It is dark in there</h1>
+        <p class="entry-desc">
+            Sudden darkness, shadows at the edge of the screen and a frightening face will appear. Not for the faint of heart.
+        </p>
+        <div class="entry-btn-stack">
+            <button class="btn-gate" onclick="app.enterExperience(false)">Enter</button>
+            <button class="btn-gate btn-gate-subtle" onclick="app.enterExperience(true)">Gentle mode (no jump scares)</button>
+        </div>
+    </div>
+
+    <!-- 2. TORCHLIGHT LAYER -->
+    <div id="torchLayer"></div>
+
+    <!-- 3. TOP HUD & CONTROLS -->
+    <header class="top-hud">
+        <div class="hud-left">
+            <span>Courage</span>
+        </div>
+        <div class="hud-right">
+            <button class="btn-hud" id="btnLights" onclick="app.toggleLights()">Lights on</button>
+            <button class="btn-hud" id="btnSound" onclick="app.toggleSound()">Sound off</button>
+        </div>
+    </header>
+
+    <div class="courage-gauge-track">
+        <div class="courage-gauge-fill" id="courageFill"></div>
+    </div>
+
+    <!-- 4. NARRATIVE STREAM -->
+    <main class="scroll-canvas">
+        <div class="hero-banner">
+            <h1 class="hero-title">HunterShell</h1>
+            <p class="hero-sub">Ghost tales of the stepwells. Ask the ghost.</p>
+        </div>
+
+        <!-- TALE 1 -->
+        <article class="tale-card" id="tale-seventh-lamp">
+            <h2 class="tale-title">The Seventh Lamp</h2>
+            <div class="tale-where">The abandoned wada above the mango orchard</div>
+            <div class="tale-tag">Original fiction, inspired by Konkan & Saurashtra village tales</div>
+            <p class="tale-body">
+                On the laterite hill above the mango orchard stands a wada that has been empty since 1952, when a fever took six children of the house in one monsoon. Six brass lamps still hang on its verandah, one for each child, and on every new-moon midnight they light themselves. The old keeper, Ganpat, taught the village one rule: count the flames. If a seventh lamp glows, someone in the village will die within seven days. In October 1984, the schoolmaster counted seven. Before the week ended, his younger brother drowned in the flooded stepwell.
+            </p>
+            <div class="tale-whisper">"Whisper: Count the flames."</div>
+            <div class="ghost-box">
+                <span class="ghost-prompt-lbl">Ask the ghost of the wada:</span>
+                <div class="ghost-input-row">
+                    <input type="text" class="ghost-input" placeholder="e.g., How many lamps hang on the verandah?" onkeydown="if(event.key==='Enter') app.ask('seventh-lamp')">
+                    <button class="ghost-btn" onclick="app.ask('seventh-lamp')">Inquire</button>
+                </div>
+                <div class="ghost-reply" id="reply-seventh-lamp"></div>
+            </div>
+        </article>
+
+        <!-- TALE 2 -->
+        <article class="tale-card" id="tale-stepwell-voice">
+            <h2 class="tale-title">The Voice Under the Peepal</h2>
+            <div class="tale-where">The dry riverbed near Junagadh</div>
+            <div class="tale-tag">Oral lore of the Saurashtra cart runners</div>
+            <p class="tale-body">
+                Travellers who cross the dry bed after twilight are told never to answer if someone calls their name twice. In 1934, a postal runner named Nathu heard his mother's voice calling from beneath the twisted peepal roots. When he turned back with his lantern, he found only a pile of white cowrie shells arranged in the shape of a hand. Nathu never spoke another sentence of Gujarati again, whispering only in syllables of old Prakrit until the day he died.
+            </p>
+            <div class="tale-whisper">"Whisper: A voice that sounds like someone you love."</div>
+            <div class="ghost-box">
+                <span class="ghost-prompt-lbl">Ask the spirit under the peepal:</span>
+                <div class="ghost-input-row">
+                    <input type="text" class="ghost-input" placeholder="e.g., What was the runner's name?" onkeydown="if(event.key==='Enter') app.ask('stepwell-voice')">
+                    <button class="ghost-btn" onclick="app.ask('stepwell-voice')">Inquire</button>
+                </div>
+                <div class="ghost-reply" id="reply-stepwell-voice"></div>
+            </div>
+        </article>
+
+        <!-- TALE 3 -->
+        <article class="tale-card" id="tale-locked-room">
+            <h2 class="tale-title">The Salt Merchant's Dice</h2>
+            <div class="tale-where">The coastal watchtower of Mandvi</div>
+            <div class="tale-tag">Historical coastal mystery, 1944</div>
+            <p class="tale-body">
+                The sea-facing timber doors of the merchant's room have been chained shut with iron padlocks since 1944. During low tide, fishermen hear ivory dice rattling across a teak gaming board on the upper floor. If you shine a flashlight through the keyhole, two copper cups of cold tea sit steaming on the table. The watchman recorded in his logbook that the game began eighty years ago, and neither player has stood up from the chairs since.
+            </p>
+            <div class="tale-whisper">"Whisper: The tea stays hot, even after eighty years."</div>
+            <div class="ghost-box">
+                <span class="ghost-prompt-lbl">Ask the merchant's ghost:</span>
+                <div class="ghost-input-row">
+                    <input type="text" class="ghost-input" placeholder="e.g., What is rolling on the table?" onkeydown="if(event.key==='Enter') app.ask('locked-room')">
+                    <button class="ghost-btn" onclick="app.ask('locked-room')">Inquire</button>
+                </div>
+                <div class="ghost-reply" id="reply-locked-room"></div>
+            </div>
+        </article>
+    </main>
+
+    <!-- 5. PROCEDURAL JUMP SCARE OVERLAY -->
+    <div id="jumpScareLayer">
+        <canvas id="scareCanvas"></canvas>
+    </div>
+
+    <script>
+        class HunterShellEngine {
+            constructor() {
+                this.isGentleMode = false;
+                this.isAudioPlaying = false;
+                this.audioCtx = null;
+                this.hasTriggeredScare = false;
+                
+                // Story Knowledge Repository (Strict Grounding)
+                this.knowledge = {
+                    "seventh-lamp": {
+                        facts: [
+                            { keys: ["how many", "lamps", "brass"], answer: "Six brass lamps hang on the verandah." },
+                            { keys: ["keeper", "old", "ganpat", "who"], answer: "The old keeper was named Ganpat." },
+                            { keys: ["seventh", "seven", "what happens"], answer: "If a seventh lamp glows, someone in the village will die within seven days." },
+                            { keys: ["year", "monsoon", "fever", "empty"], answer: "The wada has been empty since 1952, when a fever took six children." },
+                            { keys: ["brother", "schoolmaster", "drowned"], answer: "The schoolmaster's younger brother drowned in the flooded stepwell." }
+                        ]
+                    },
+                    "stepwell-voice": {
+                        facts: [
+                            { keys: ["runner", "postal", "name", "who"], answer: "The postal runner was named Nathu." },
+                            { keys: ["voice", "sound", "whose"], answer: "A woman's voice calls travellers, sounding like someone they love." },
+                            { keys: ["shells", "cowrie", "found"], answer: "He found a pile of white cowrie shells arranged in the shape of a hand." },
+                            { keys: ["language", "prakrit", "spoke"], answer: "He whispered only in syllables of old Prakrit until the day he died." },
+                            { keys: ["year", "when"], answer: "It happened in the winter of 1934." }
+                        ]
+                    },
+                    "locked-room": {
+                        facts: [
+                            { keys: ["dice", "rattling", "rolling", "table"], answer: "Ivory dice rattle across a teak gaming board on the upper floor." },
+                            { keys: ["tea", "cups", "steaming"], answer: "Two copper cups of cold tea sit steaming on the table." },
+                            { keys: ["year", "when", "padlock", "chained"], answer: "The doors have been chained shut with iron padlocks since 1944." },
+                            { keys: ["game", "how long", "eighty"], answer: "The game began eighty years ago, and neither player has stood up from the chairs." }
+                        ]
+                    }
+                };
+            }
+
+            enterExperience(gentle) {
+                this.isGentleMode = gentle;
+                document.getElementById('entryScreen').style.display = 'none';
+                if (!gentle) {
+                    this.initJumpScareTrigger();
+                }
+            }
+
+            ask(storyId) {
+                const card = document.getElementById(`tale-${storyId}`);
+                const input = card.querySelector('.ghost-input');
+                const reply = document.getElementById(`reply-${storyId}`);
+                const query = input.value.toLowerCase().trim();
+
+                if (!query) return;
+
+                reply.style.display = 'block';
+                reply.innerHTML = '<em>The ghost listens into the dark...</em>';
+
+                setTimeout(() => {
+                    const taleData = this.knowledge[storyId];
+                    let match = null;
+
+                    for (let f of taleData.facts) {
+                        if (f.keys.some(k => query.includes(k))) {
+                            match = f.answer;
+                            break;
+                        }
+                    }
+
+                    if (match) {
+                        reply.innerHTML = `"${match}"`;
+                    } else {
+                        // Strict folklore elder fallback
+                        reply.innerHTML = `"The elder never told me that."`;
+                    }
+                }, 350);
+            }
+
+            toggleLights() {
+                document.body.classList.toggle('lights-on');
+                const btn = document.getElementById('btnLights');
+                btn.innerText = document.body.classList.contains('lights-on') ? 'Lights off' : 'Lights on';
+            }
+
+            toggleSound() {
+                const btn = document.getElementById('btnSound');
+                if (!this.isAudioPlaying) {
+                    this.startAmbientAudio();
+                    this.isAudioPlaying = true;
+                    btn.innerText = 'Sound on';
+                    btn.style.color = '#f59e0b';
+                } else {
+                    if (this.audioCtx) this.audioCtx.suspend();
+                    this.isAudioPlaying = false;
+                    btn.innerText = 'Sound off';
+                    btn.style.color = '#94a3b8';
+                }
+            }
+
+            startAmbientAudio() {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                this.audioCtx = new AudioCtx();
+
+                const osc = this.audioCtx.createOscillator();
+                const filter = this.audioCtx.createBiquadFilter();
+                const gain = this.audioCtx.createGain();
+
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(48, this.audioCtx.currentTime);
+
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(110, this.audioCtx.currentTime);
+
+                gain.gain.setValueAtTime(0.06, this.audioCtx.currentTime);
+
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(this.audioCtx.destination);
+                osc.start();
+            }
+
+            initJumpScareTrigger() {
+                window.addEventListener('scroll', () => {
+                    const scrollPos = window.scrollY + window.innerHeight;
+                    const docHeight = document.documentElement.scrollHeight;
+
+                    if (!this.hasTriggeredScare && scrollPos > docHeight * 0.65) {
+                        this.hasTriggeredScare = true;
+                        this.triggerScare();
+                    }
+                });
+            }
+
+            triggerScare() {
+                const layer = document.getElementById('jumpScareLayer');
+                const canvas = document.getElementById('scareCanvas');
+                const ctx = canvas.getContext('2d');
+
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+
+                ctx.fillStyle = "#000000";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                const cx = canvas.width / 2;
+                const cy = canvas.height / 2;
+
+                ctx.fillStyle = "#cbd5e1";
+                ctx.beginPath();
+                ctx.arc(cx, cy - 30, 130, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = "#000000";
+                ctx.beginPath();
+                ctx.ellipse(cx - 45, cy - 50, 24, 38, 0, 0, Math.PI * 2);
+                ctx.ellipse(cx + 45, cy - 50, 24, 38, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.ellipse(cx, cy + 45, 36, 68, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                layer.style.display = 'flex';
+
+                setTimeout(() => {
+                    layer.style.display = 'none';
+                }, 480);
+            }
+        }
+
+        const app = new HunterShellEngine();
+
+        // Torchlight tracking
+        const torch = document.getElementById('torchLayer');
+        const courageFill = document.getElementById('courageFill');
+
+        window.addEventListener('mousemove', (e) => {
+            torch.style.background = `radial-gradient(circle 180px at ${e.clientX}px ${e.clientY}px, transparent 0%, rgba(4,3,5,0.88) 140px, #040305 280px, #040305 100%)`;
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches.length > 0) {
+                const t = e.touches[0];
+                torch.style.background = `radial-gradient(circle 170px at ${t.clientX}px ${t.clientY}px, transparent 0%, rgba(4,3,5,0.88) 130px, #040305 260px, #040305 100%)`;
+            }
+        });
+
+        window.addEventListener('scroll', () => {
+            const total = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (window.scrollY / total) * 100;
+            courageFill.style.width = `${Math.max(8, 100 - progress)}%`;
+        });
+    </script>
+</body>
+</html>
